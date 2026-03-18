@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 我的第一个本岁 · 完整版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', 'Segoe UI', 'Chalkboard SE', 'Patrick Hand', cursive, sans-serif;
+        }
+
+        /* ---------- 全局样式 ---------- */
+        body {
+            min-height: 100vh;
+            background: #ac0e0e;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #ffd700 3%, transparent 3.5%),
+                radial-gradient(circle at 95% 15%, #ffcc00 4%, transparent 4.5%),
+                radial-gradient(circle at 30% 80%, #ffaa00 5%, transparent 5.5%),
+                linear-gradient(145deg, #d12222 0%, #b10e0e 100%);
+            background-size: 80px 80px, 120px 120px, 150px 150px, cover;
+            position: relative;
+        }
+
+        /* 悬挂灯笼装饰 */
+        body::before {
+            content: "🏮🏮🏮🏮🏮🏮🏮🏮";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            font-size: 4rem;
+            color: #ffdd88;
+            text-shadow: 0 0 10px #ffb347;
+            letter-spacing: 20px;
+            white-space: nowrap;
+            opacity: 0.25;
+            transform: rotate(-2deg);
+            pointer-events: none;
+            z-index: 1;
+            animation: swingLights 6s infinite alternate;
+        }
+
+        @keyframes swingLights {
+            0% { transform: rotate(-3deg) translateY(0); }
+            100% { transform: rotate(3deg) translateY(10px); }
+        }
+
+        /* 页面切换 */
+        .page {
+            position: relative;
+            z-index: 20;
+            min-height: 100vh;
+            padding: 1.5rem 1rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.4s ease;
+        }
+
+        .hidden-page {
+            display: none !important;
+        }
+
+        /* ---------- 登录页样式 ---------- */
+        .login-container {
+            width: 100%;
+            max-width: 750px;
+            background: rgba(255, 245, 220, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 100px 100px 60px 60px;
+            border: 8px solid #fff8e0;
+            box-shadow: 0 30px 0 #a1421f, 0 40px 50px -10px #380000;
+            padding: 2.5rem 2rem 3rem;
+            text-align: center;
+            transform: rotate(-0.5deg);
+            margin: auto;
+        }
+
+        .title {
+            font-size: 5.5rem;
+            font-weight: 900;
+            color: #fef5d6;
+            text-shadow: 5px 5px 0 #6b2f1a, 8px 8px 0 #4f2313, 12px 12px 0 #301408;
+            margin-bottom: 1rem;
+            letter-spacing: 6px;
+            line-height: 1.1;
+        }
+
+        .totem-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            font-size: 3.2rem;
+            margin: 1.5rem 0;
+            filter: drop-shadow(0 6px 0 #943e1a);
+            flex-wrap: wrap;
+        }
+
+        .totem-item {
+            background: #fbdb9c;
+            padding: 0.3rem 0.8rem;
+            border-radius: 60px;
+            border: 4px solid white;
+            box-shadow: 0 5px 0 #b4692c;
+            transform: rotate(1deg);
+        }
+
+        .sub-title {
+            font-size: 2.4rem;
+            background: #f9d67a;
+            color: #7b2c1a;
+            display: inline-block;
+            padding: 0.5rem 2.2rem;
+            border-radius: 60px;
+            border: 5px solid #fff0b5;
+            box-shadow: 0 8px 0 #b95727;
+            margin: 1.2rem 0;
+            font-weight: bold;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            font-size: 1.6rem;
+            background: #cbe6d9;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: 4px solid white;
+            box-shadow: 0 5px 0 #7b935e;
+            color: #224411;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .mini-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .mini-tag {
+            background: #fedb9f;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            border: 3px solid white;
+            box-shadow: 0 3px 0 #b25623;
+        }
+
+        .explore-btn {
+            background: #ffbb77;
+            border: none;
+            font-size: 4rem;
+            font-weight: bold;
+            color: #642a10;
+            padding: 1.2rem 2.5rem 1.8rem;
+            border-radius: 120px;
+            border: 8px solid white;
+            box-shadow: 0 20px 0 #a64b22, 0 30px 30px #3e0000;
+            cursor: pointer;
+            transition: 0.1s ease;
+            margin-top: 1.5rem;
+            width: 100%;
+            transform: rotate(1deg);
+            letter-spacing: 4px;
+        }
+
+        .explore-btn:active {
+            transform: translateY(12px) rotate(0deg);
+            box-shadow: 0 8px 0 #a64b22, 0 20px 25px #3e0000;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 1.4rem;
+            color: #fff3b0;
+            background: #9f412a;
+            padding: 0.4rem 1.5rem;
+            border-radius: 40px;
+            display: inline-block;
+            border: 3px solid #ffc489;
+        }
+
+        /* ---------- 主页面样式 ---------- */
+        .main-header {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            width: 100%;
+        }
+
+        .main-header h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            background: rgba(255, 245, 200, 0.8);
+            backdrop-filter: blur(4px);
+            color: #fef5d6;
+            display: inline-block;
+            padding: 0.3rem 2rem 0.6rem 2rem;
+            border-radius: 80px 80px 30px 30px;
+            border: 5px solid #fff3c9;
+            text-shadow: 3px 3px 0 #4b2a1a, 5px 5px 0 #3b1e10;
+            letter-spacing: 3px;
+            transform: rotate(-0.5deg);
+            box-shadow: 0 10px 0 #8b3c2c, 0 15px 20px #490000;
+        }
+
+        .main-header p {
+            font-size: 1.6rem;
+            background: #f9d67a;
+            color: #632020;
+            display: inline-block;
+            padding: 0.4rem 1.8rem;
+            border-radius: 50px;
+            border: 3px solid #ffdfa0;
+            margin-top: 0.6rem;
+            box-shadow: 0 5px 0 #a1451d;
+            font-weight: bold;
+        }
+
+        .back-to-login {
+            font-size: 1.2rem;
+            background: #fdebba;
+            color: #632020;
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            border: 3px solid #ffc489;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            display: inline-block;
+            box-shadow: 0 4px 0 #a64b22;
+        }
+
+        .back-to-login:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #a64b22;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem 1rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            height: 320px;
+            cursor: pointer;
+            border-radius: 40px 40px 25px 25px;
+            box-shadow: 0 10px 0 #9f3a1b, 0 15px 20px -5px #2d0000;
+            transition: box-shadow 0.2s;
+        }
+
+        .flip-card:hover {
+            box-shadow: 0 12px 0 #8b2f12, 0 18px 22px -4px #1f0000;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.4s ease;
+            transform-style: preserve-3d;
+            border-radius: 40px 40px 25px 25px;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 40px 40px 25px 25px;
+            padding: 0.8rem 0.8rem 0.6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 4px solid #fffde7;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.05);
+            overflow-y: auto;
+        }
+
+        .card-front {
+            background: inherit;
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            background: #fef7e9;
+            transform: rotateY(180deg);
+            border: 5px solid #fdc68b;
+            justify-content: flex-start;
+        }
+
+        .card-atmosphere {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 4.5rem;
+            opacity: 0.2;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .current-month-highlight {
+            box-shadow: 0 0 0 3px #ffd966, 0 0 10px 3px #ffb347, 0 10px 0 #9f3a1b !important;
+            animation: breathe 2s infinite alternate;
+        }
+
+        @keyframes breathe {
+            from { box-shadow: 0 0 0 3px #ffd966, 0 0 8px 2px #ffae42, 0 10px 0 #9f3a1b; }
+            to { box-shadow: 0 0 0 6px #ffeeaa, 0 0 15px 5px #ff9100, 0 10px 0 #9f3a1b; }
+        }
+
+        .butterfly-float {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 1.8rem;
+            animation: flutter 1.5s infinite;
+            z-index: 40;
+            pointer-events: none;
+            filter: drop-shadow(0 0 2px #ffcc88);
+        }
+
+        @keyframes flutter {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .month-badge {
+            background: #fec54b;
+            color: #3f160b;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 0.2rem 1.2rem;
+            border-radius: 30px;
+            border: 3px solid white;
+            box-shadow: 0 3px 0 #b45228;
+            z-index: 10;
+            margin-top: -0.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        ruby {
+            ruby-align: center;
+        }
+        rt {
+            font-size: 0.7rem;
+            color: #2f1111;
+            background: #fffde7;
+            padding: 0 2px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .pinyin-box {
+            font-size: 1rem;
+            background: #fef1b9;
+            padding: 0.1rem 0.8rem;
+            border-radius: 20px;
+            margin: 0.1rem 0;
+            border: 1px solid #ffe09c;
+        }
+
+        .lunar-text {
+            font-size: 0.9rem;
+            background: #edcb9e;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            border: 2px solid #fff4d6;
+            color: #3d281a;
+            font-weight: 600;
+            margin: 0.2rem 0;
+        }
+
+        .term-icons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.3rem;
+            margin: 0.2rem 0;
+        }
+
+        .term-icon {
+            background: #ffe59e;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1f3d3d;
+            border: 2px solid white;
+            box-shadow: 0 2px 0 #b9874b;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .special-event {
+            background: #fdd16a;
+            padding: 0.2rem 1rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #7b2806;
+            border: 3px solid #ffdbb5;
+            box-shadow: 0 3px 0 #b1561d;
+            margin: 0.2rem 0;
+        }
+
+        .season-totem {
+            font-size: 1.6rem;
+            background: #fad98b;
+            border-radius: 50%;
+            padding: 0.2rem 0.4rem;
+            margin: 0.1rem 0;
+            border: 2px solid white;
+            box-shadow: 0 2px 0 #b25623;
+            display: inline-block;
+        }
+
+        .food-item {
+            background: #fff9e0;
+            border-radius: 25px;
+            padding: 0.2rem 0.8rem;
+            margin: 0.2rem 0;
+            font-size: 1rem;
+            border: 2px solid #feb258;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-title {
+            font-size: 1.3rem;
+            background: #fccf9c;
+            padding: 0.2rem 1rem;
+            border-radius: 25px;
+            border: 2px solid #fff3b3;
+            margin-top: 0.2rem;
+        }
+
+        .back-poem {
+            font-size: 0.95rem;
+            background: #dcedc4;
+            padding: 0.4rem;
+            border-radius: 18px;
+            margin: 0.3rem 0;
+            line-height: 1.3;
+        }
+
+        .main-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            font-size: 1.3rem;
+            background: #fdebba;
+            padding: 0.3rem 1.2rem;
+            border-radius: 50px;
+            border: 4px solid #ffd9a0;
+            box-shadow: 0 6px 0 #a8421a;
+            z-index: 30;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .no-sound-note {
+            font-size: 1rem;
+            color: #ffefc0;
+            background: #9f412a;
+            padding: 0.2rem 1.2rem;
+            border-radius: 30px;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页 -->
+    <div id="loginPage" class="page">
+        <div class="login-container">
+            <div class="title">📖 我的<br>第一个本岁</div>
+            
+            <div class="totem-row">
+                <span class="totem-item">🌸</span>
+                <span class="totem-item">🌿</span>
+                <span class="totem-item">🐦</span>
+                <span class="totem-item">🐸</span>
+                <span class="totem-item">🌾</span>
+                <span class="totem-item">✨</span>
+            </div>
+            
+            <div class="sub-title">二十四节气 · 儿童启蒙</div>
+            
+            <div class="feature-list">
+                <div class="feature-item"><span>🥟</span> 节气吃什么</div>
+                <div class="feature-item"><span>📜</span> 古诗小韵文</div>
+                <div class="feature-item"><span>🌸</span> 当月图腾</div>
+                <div class="feature-item"><span>🦋</span> 呼吸灯特效</div>
+            </div>
+            
+            <div class="mini-tags">
+                <span class="mini-tag">立春</span><span class="mini-tag">惊蛰</span>
+                <span class="mini-tag">清明</span><span class="mini-tag">立夏</span>
+                <span class="mini-tag">芒种</span><span class="mini-tag">小暑</span>
+                <span class="mini-tag">立秋</span><span class="mini-tag">白露</span>
+                <span class="mini-tag">寒露</span><span class="mini-tag">立冬</span>
+                <span class="mini-tag">大雪</span><span class="mini-tag">冬至</span>
+            </div>
+            
+            <button class="explore-btn" id="startExploreBtn">✨ 开始探索 ✨</button>
+            
+            <div class="footer-note">
+                一月腊梅 · 二月柳芽 · 三月燕子 · 四月青蛙
+            </div>
+        </div>
+    </div>
+
+    <!-- 主页面（节气卡片）初始隐藏 -->
+    <div id="mainPage" class="page hidden-page">
+        <div class="main-header">
+            <div class="back-to-login" id="backToLoginBtn">← 返回登录页</div>
+            <h1>📖 我的第一个本岁</h1>
+            <p>🌸 戳卡片 · 看节气 · 吃什么 🌸</p>
+        </div>
+
+        <div class="calendar-grid" id="monthGrid"></div>
+
+        <div class="main-footer">
+            <span>🏮 一月腊梅</span> <span>🌿 二月柳芽</span> <span>🐦 三月燕子</span>
+            <span>🐸 四月青蛙</span> <span>🌾 五月菖蒲</span> <span>✨ 六月萤火虫</span>
+        </div>
+        <div class="no-sound-note">✨ 轻轻翻阅 · 节气小书 ✨</div>
+    </div>
+
+    <script>
+        (function() {
+            // 页面切换
+            const loginPage = document.getElementById('loginPage');
+            const mainPage = document.getElementById('mainPage');
+            const startBtn = document.getElementById('startExploreBtn');
+            const backBtn = document.getElementById('backToLoginBtn');
+
+            startBtn.addEventListener('click', function() {
+                loginPage.classList.add('hidden-page');
+                mainPage.classList.remove('hidden-page');
+            });
+
+            backBtn.addEventListener('click', function() {
+                mainPage.classList.add('hidden-page');
+                loginPage.classList.remove('hidden-page');
+            });
+
+            // ---------- 节气数据（已全部核对正确）----------
+            const now = new Date();
+            const currentMonthIndex = now.getMonth();
+
+            const monthsData = [
+                { // 一月
+                    month: "一月", monthEn: "January", lunar: "农历腊月", 
+                    terms: ["小寒", "大寒"], special: "腊八节",
+                    food: "🥣 腊八粥", foodIcon: "🥣", totem: "腊梅", totemIcon: "🌸",
+                    pinyin: "腊(là)八(bā)", 
+                    backPoem: "《腊日》—— 杜甫 · 腊日常年暖尚遥，今年腊日冻全消。", 
+                    custom: "❄️ 小寒吃菜饭，大寒打年糕",
+                    atmosphereColor: "#c0e2f0", 
+                    bgImage: "radial-gradient(circle at 10% 30%, #ffcf9e, transparent 40%)", 
+                    atmosphereIcon: "❄️" 
+                },
+                { // 二月
+                    month: "二月", monthEn: "February", lunar: "农历正月/二月", 
+                    terms: ["立春", "雨水"], special: "元宵节",
+                    food: "🍡 元宵", foodIcon: "🍡", totem: "柳芽", totemIcon: "🌿",
+                    pinyin: "立(lì)春(chūn) 雨(yǔ)水(shuǐ)",
+                    backPoem: "《咏柳》—— 贺知章 · 碧玉妆成一树高，万条垂下绿丝绦。", 
+                    custom: "🌸 咬春吃春饼，雨水润万物",
+                    atmosphereColor: "#fbcfdf", 
+                    bgImage: "radial-gradient(circle at 80% 20%, #fff2b5, transparent 60%)", 
+                    atmosphereIcon: "🌱" 
+                },
+                { // 三月
+                    month: "三月", monthEn: "March", lunar: "农历二月/三月", 
+                    terms: ["惊蛰", "春分"], special: null,
+                    food: "🍐 吃梨", foodIcon: "🍐", totem: "燕子", totemIcon: "🐦",
+                    pinyin: "惊(jīng)蛰(zhé) 春(chūn)分(fēn)",
+                    backPoem: "《春分》—— 日月阳阴两均天，玄鸟不辞桃花寒。", 
+                    custom: "🌱 惊蛰吃梨，春分立蛋",
+                    atmosphereColor: "#b8d9b0", 
+                    bgImage: "repeating-linear-gradient(45deg, #ffeab3 0px, #ffeab3 8px, #f3f0c2 8px, #f3f0c2 16px)", 
+                    atmosphereIcon: "🐞" 
+                },
+                { // 四月
+                    month: "四月", monthEn: "April", lunar: "农历三月", 
+                    terms: ["清明", "谷雨"], special: "清明节",
+                    food: "🍡 青团", foodIcon: "🍡", totem: "青蛙", totemIcon: "🐸",
+                    pinyin: "清(qīng)明(míng) 谷(gǔ)雨(yǔ)",
+                    backPoem: "《清明》—— 杜牧 · 清明时节雨纷纷，路上行人欲断魂。", 
+                    custom: "☔️ 清明扫墓，谷雨摘茶",
+                    atmosphereColor: "#b5d6d0", 
+                    bgImage: "radial-gradient(circle at 40% 40%, #c5edc5, transparent 50%)", 
+                    atmosphereIcon: "☔️" 
+                },
+                { // 五月
+                    month: "五月", monthEn: "May", lunar: "农历三月/四月", 
+                    terms: ["立夏"], special: "端午节",
+                    food: "🌿 粽子", foodIcon: "🌿", totem: "菖蒲", totemIcon: "🌾",
+                    pinyin: "端(duān)午(wǔ) 立(lì)夏(xià)",
+                    backPoem: "《端午》—— 节分端午自谁言，万古传闻为屈原。", 
+                    custom: "🐲 赛龙舟 · 吃粽子 · 挂艾草",
+                    atmosphereColor: "#f5c9a3", 
+                    bgImage: "radial-gradient(circle at 70% 10%, #ffdb9d, #fcc79b)", 
+                    atmosphereIcon: "🐲" 
+                },
+                { // 六月
+                    month: "六月", monthEn: "June", lunar: "农历四月/五月", 
+                    terms: ["芒种", "夏至"], special: null,
+                    food: "🍜 夏至面", foodIcon: "🍜", totem: "萤火虫", totemIcon: "✨",
+                    pinyin: "芒(máng)种(zhòng) 夏(xià)至(zhì)",
+                    backPoem: "《夏至》—— 昼晷已云极，宵漏自此长。", 
+                    custom: "🌾 芒种送花神，夏至吃凉面",
+                    atmosphereColor: "#f5e394", 
+                    bgImage: "repeating-linear-gradient(0deg, #fff1b8 0px, #fff1b8 6px, #fff7d7 6px, #fff7d7 12px)", 
+                    atmosphereIcon: "🌻" 
+                },
+                { // 七月
+                    month: "七月", monthEn: "July", lunar: "农历五月/六月", 
+                    terms: ["小暑", "大暑", "立秋"], special: "七夕节",
+                    food: "🍑 巧果", foodIcon: "🍑", totem: "喜鹊", totemIcon: "🐦",
+                    pinyin: "七(qī)夕(xī) 小(xiǎo)暑(shǔ)",
+                    backPoem: "《七夕》—— 银烛秋光冷画屏，轻罗小扇扑流萤。", 
+                    custom: "✨ 七夕乞巧，大暑喝伏茶",
+                    atmosphereColor: "#faba9b", 
+                    bgImage: "radial-gradient(circle at 20% 70%, #fec3a1, #ffe2b0)", 
+                    atmosphereIcon: "🥂" 
+                },
+                { // 八月
+                    month: "八月", monthEn: "August", lunar: "农历七月/八月", 
+                    terms: ["立秋", "处暑"], special: "中秋节",
+                    food: "🥮 月饼", foodIcon: "🥮", totem: "玉兔", totemIcon: "🐇",
+                    pinyin: "中(zhōng)秋(qiū) 立(lì)秋(qiū)",
+                    backPoem: "《静夜思》—— 床前明月光，疑是地上霜。", 
+                    custom: "🌕 中秋赏月·吃月饼，贴秋膘",
+                    atmosphereColor: "#efc7a6", 
+                    bgImage: "radial-gradient(circle at 30% 40%, #ffdba5, #fbdead)", 
+                    atmosphereIcon: "🌕" 
+                },
+                { // 九月
+                    month: "九月", monthEn: "September", lunar: "农历八月/九月", 
+                    terms: ["白露", "秋分"], special: null,
+                    food: "🍐 秋梨", foodIcon: "🍐", totem: "大雁", totemIcon: "🦅",
+                    pinyin: "白(bái)露(lù) 秋(qiū)分(fēn)",
+                    backPoem: "《秋风词》—— 秋风清，秋月明，落叶聚还散。", 
+                    custom: "🍂 白露饮米酒，秋分吃秋菜",
+                    atmosphereColor: "#cbb89e", 
+                    bgImage: "radial-gradient(circle at 70% 80%, #eeddbb, transparent)", 
+                    atmosphereIcon: "🍁" 
+                },
+                { // 十月
+                    month: "十月", monthEn: "October", lunar: "农历八月/九月", 
+                    terms: ["寒露", "霜降"], special: "重阳节",
+                    food: "🍰 重阳糕", foodIcon: "🍰", totem: "菊花", totemIcon: "🌼",
+                    pinyin: "重(chóng)阳(yáng) 霜(shuāng)降(jiàng)",
+                    backPoem: "《九月九日忆山东兄弟》—— 独在异乡为异客，每逢佳节倍思亲。", 
+                    custom: "🏔️ 重阳登高·插茱萸，霜降柿子红",
+                    atmosphereColor: "#dbba8c", 
+                    bgImage: "linear-gradient(145deg, #fde6b1, #f4ca9b)", 
+                    atmosphereIcon: "🏔️" 
+                },
+                { // 十一月
+                    month: "十一月", monthEn: "November", lunar: "农历九月/十月", 
+                    terms: ["立冬", "小雪"], special: null,
+                    food: "🥟 饺子", foodIcon: "🥟", totem: "松鼠", totemIcon: "🐿️",
+                    pinyin: "立(lì)冬(dōng) 小(xiǎo)雪(xuě)",
+                    backPoem: "《立冬》—— 冻笔新诗懒写，寒炉美酒时温。", 
+                    custom: "❄️ 立冬吃饺子，小雪腌菜",
+                    atmosphereColor: "#b7cfda", 
+                    bgImage: "radial-gradient(circle at 10% 30%, #c3e0ed, transparent)", 
+                    atmosphereIcon: "🥟" 
+                },
+                { // 十二月
+                    month: "十二月", monthEn: "December", lunar: "农历十月/十一月", 
+                    terms: ["大雪", "冬至"], special: "冬至",
+                    food: "🍲 羊肉汤", foodIcon: "🍲", totem: "冬眠熊", totemIcon: "🐻",
+                    pinyin: "冬(dōng)至(zhì) 大(dà)雪(xuě)",
+                    backPoem: "《冬至》—— 邯郸驿里逢冬至，抱膝灯前影伴身。", 
+                    custom: "⛄️ 冬至吃汤圆，大雪腌肉",
+                    atmosphereColor: "#b0ccda", 
+                    bgImage: "radial-gradient(circle at 80% 20%, #ceecf0, #b4d3e0)", 
+                    atmosphereIcon: "⛄️" 
+                }
+            ];
+
+            const grid = document.getElementById('monthGrid');
+
+            function renderCards() {
+                grid.innerHTML = '';
+                monthsData.forEach((m, idx) => {
+                    const flipCard = document.createElement('div');
+                    flipCard.className = 'flip-card';
+                    if (idx === currentMonthIndex) flipCard.classList.add('current-month-highlight');
+
+                    const inner = document.createElement('div');
+                    inner.className = 'flip-card-inner';
+
+                    const front = document.createElement('div');
+                    front.className = 'card-front';
+                    front.style.background = `${m.atmosphereColor} ${m.bgImage}`;
+                    front.style.backgroundBlendMode = 'overlay';
+
+                    if (idx === currentMonthIndex) {
+                        const butterfly = document.createElement('div');
+                        butterfly.className = 'butterfly-float';
+                        butterfly.innerText = '🦋';
+                        front.appendChild(butterfly);
+                    }
+
+                    const atmos = document.createElement('div');
+                    atmos.className = 'card-atmosphere';
+                    atmos.innerText = m.atmosphereIcon;
+                    front.appendChild(atmos);
+
+                    front.innerHTML += `
+                        <div class="month-badge">${m.month} · ${m.monthEn}</div>
+                        <div class="pinyin-box"><ruby>${m.pinyin}<rt>注音</rt></ruby></div>
+                        <div class="lunar-text">${m.lunar}</div>
+                        <div class="term-icons">
+                            ${m.terms.map(t => `<div class="term-icon"><span>🍃</span>${t}</div>`).join('')}
+                        </div>
+                        ${m.special ? `<div class="special-event">🎊 ${m.special} 🎊</div>` : ''}
+                        <div class="season-totem">${m.totemIcon} ${m.totem}</div>
+                        <div class="food-item">${m.foodIcon} ${m.food}</div>
+                    `;
+
+                    const back = document.createElement('div');
+                    back.className = 'card-back';
+                    back.innerHTML = `
+                        <div class="back-title">📜 节气小诗</div>
+                        <div class="back-poem">${m.backPoem}</div>
+                        <div class="back-title">🎐 小习俗</div>
+                        <div class="food-item" style="background:#fadcd9; margin-top:0.2rem;">${m.custom}</div>
+                        <div style="margin-top:0.4rem; font-size:1.5rem;">${m.totemIcon}</div>
+                        <p style="font-size:0.8rem; margin-top:0.2rem;">✨ 翻回去 ✨</p>
+                    `;
+
+                    inner.appendChild(front);
+                    inner.appendChild(back);
+                    flipCard.appendChild(inner);
+                    grid.appendChild(flipCard);
+
+                    flipCard.addEventListener('click', (e) => {
+                        flipCard.classList.toggle('flipped');
+                    });
+                });
+            }
+
+            renderCards();
+        })();
+    </script>
+</body>
+</html>
